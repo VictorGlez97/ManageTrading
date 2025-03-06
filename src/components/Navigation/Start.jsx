@@ -2,9 +2,9 @@ import TradeIcon from '../../assets/img/trade.png'
 
 const Start = () => {
     return (
-        <>
-            <img alt='logo' src={ TradeIcon } height='45' onClick={() => { navigate('/') }}></img>
-        </>
+        <div className='flex flex-column justify-content-center'>
+            <img alt='logo' src={ TradeIcon } height='35' onClick={() => { navigate('/') }}></img>
+        </div>
     )
 }
 

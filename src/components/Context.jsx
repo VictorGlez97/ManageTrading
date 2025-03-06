@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
             const response = await api.post('user/login', data)
 
             if ( !response.data.error ) {
-                // sessionStorage.setItem('user', JSON.stringify(response.data.user));
+                sessionStorage.setItem('user', JSON.stringify(response.data.user));
                 setUser(response.data.user);
             }
 
@@ -24,20 +24,20 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = () => {
-        // sessionStorage.removeItem('user');
+        sessionStorage.removeItem('user');
         setUser(null);
     }
 
-    // const searchUser = () => {
-    //     const userLocal = sessionStorage.getItem('user');
-    //     if ( userLocal !== null && userLocal !== undefined ) {
-    //         console.log( userLocal );
-    //         setUser(JSON.parse(userLocal));
-    //     }
-    // }
+    const searchUser = () => {
+        const userLocal = sessionStorage.getItem('user');
+        if ( userLocal !== null && userLocal !== undefined ) {
+            console.log( userLocal );
+            setUser(JSON.parse(userLocal));
+        }
+    }
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, searchUser }}>
             {children}
         </AuthContext.Provider>
     )

@@ -4,7 +4,7 @@ import { Card } from 'primereact/Card'
 import { InputText } from 'primereact/InputText'
 import { Password } from 'primereact/Password'
 import { Button } from 'primereact/Button'
-import api from '../services/api'
+// import api from '../services/api'
 import { useAuth } from '../components/Context'
 
 const Login = () => {
