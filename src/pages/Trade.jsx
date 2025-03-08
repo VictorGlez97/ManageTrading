@@ -3,7 +3,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { InputTextarea } from 'primereact/inputtextarea';
-import { InputText } from "primereact/InputText";
+import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/Button";
 import { useForm } from "../hooks/useForm";
 import { Card } from "primereact/Card";

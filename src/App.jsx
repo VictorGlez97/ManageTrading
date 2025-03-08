@@ -11,7 +11,6 @@ import "primeicons/primeicons.css";
 // PRIMEFLEX
 import 'primeflex/primeflex.css';
 
-
 // // NAVBAR
 import Navigation from './components/Navigation/Navigation';
 
