@@ -12,32 +12,39 @@ export const AuthProvider = ({ children }) => {
             const data = { username, password }
             const response = await api.post('user/login', data)
 
+            console.log( response );
+
             if ( !response.data.error ) {
-                sessionStorage.setItem('user', JSON.stringify(response.data.user));
-                setUser(response.data.user);
+                console.log( `Agregando... ${response.data.token}` );
+                api.defaults.headers.common['Authorization'] = `Bearer ${response.data.user.token}`;
+                sessionStorage.setItem('user', response.data.user.token);
+                setUser(response.data.user.token);
             }
 
             return !response.data.error;
         } catch (error) {
-            return false;
+            console.log( error );
+            return false
         }
     }
 
     const logout = () => {
+        api.defaults.headers.common['Authorization'] = null;
         sessionStorage.removeItem('user');
         setUser(null);
     }
 
-    const searchUser = () => {
-        const userLocal = sessionStorage.getItem('user');
-        if ( userLocal !== null && userLocal !== undefined ) {
-            console.log( userLocal );
-            setUser(JSON.parse(userLocal));
-        }
-    }
+    // const searchUser = () => {
+    //     const userLocal = sessionStorage.getItem('user');
+    //     if ( userLocal !== null && userLocal !== undefined ) {
+    //         console.log( userLocal );
+    //         api.defaults.headers.common['Authorization'] = `Bearer ${userLocal}`;
+    //         setUser(userLocal);
+    //     }
+    // }
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, searchUser }}>
+        <AuthContext.Provider value={{ user, login, logout/*, searchUser*/ }}>
             {children}
         </AuthContext.Provider>
     )

@@ -24,16 +24,16 @@ import Trade from './pages/Trade';
 
 function App() {
 
-  const { user, searchUser } = useAuth();
+  const { user/*, searchUser*/ } = useAuth();
   // const user = null;
 
-  useEffect(() => {
-    if (!(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))) {
-      if ( user === null || user === undefined ) {
-        searchUser();
-      }
-    }
-  })
+  // useEffect(() => {
+  //   if (!(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))) {
+  //     if ( user === null || user === undefined ) {
+  //       searchUser();
+  //     }
+  //   }
+  // })
 
   return (
     <>

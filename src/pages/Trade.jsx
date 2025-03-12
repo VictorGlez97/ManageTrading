@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { Dropdown } from "primereact/dropdown";
+import React, { useEffect, useRef, useState } from "react";
+
+import { Button } from "primereact/Button";
 import { Calendar } from "primereact/calendar";
+import { Card } from "primereact/Card";
+import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputTextarea } from 'primereact/inputtextarea';
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/Button";
-import { useForm } from "../hooks/useForm";
-import { Card } from "primereact/Card";
+
+// import { Toast } from 'primereact/toast';
+
 import api from "../services/api";
-import { useAuth } from "../components/Context";
+
+import { useForm } from "../hooks/useForm";
 
 const Trade = () => {
 
-    const { user } = useAuth();
+    // const toast = useRef(null);
 
     const [ id, setId ] = useState(0);
 
@@ -26,7 +30,7 @@ const Trade = () => {
     useEffect(() => { getBanks(); getTypes(); getMarkets(); getHours(); }, [])
 
     const getBanks = async () => {
-        const resp = await api.get(`bank/user/${user.username}`)
+        const resp = await api.get(`bank/user`)
         if ( resp.data.data ) {
             setBankOptions(resp.data.data);
         }
@@ -57,160 +61,169 @@ const Trade = () => {
         
         console.log( Values );
 
-        // const resp = await api.post('trade', Values);
+        const resp = await api.post('trade', Values);
+
+        console.log( resp );
 
 
-    }
+        if ( resp.data.error ) {
+            toast.current.show({severity: 'warn', summary: 'Advertencia', detail: resp.data.msg, life: 3000});
+            return;    
+        }
 
-    const handleClean = () => {
+        toast.current.show({severity: 'success', summary: 'Éxito', detail: resp.data.msg, life: 3000});
         Reset();
+
     }
 
     return (
-        <div className="flex justify-content-center">
-            <div className="p-4 col-6">
-                <Card 
-                    title={id !== 0 && id !== null ? 'Actualiza trade' : 'Nuevo trade'}
-                    className="p-fluid" 
-                >
-                    <div className="col-12" style={{ marginTop: '-1rem' }}>
-                        <label>Movimiento</label>
-                        <InputText 
-                            value={Values.mov} 
-                            onChange={(e) => handleInputChange(e.target.value, "mov")} 
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Tipo</label>
-                        <Dropdown 
-                            value={Values.type} 
-                            options={typeOptions} 
-                            onChange={(e) => handleInputChange(e.value, "type")} 
-                            optionLabel="enumlabel"
-                            optionValue="enumlabel"
-                            placeholder="Seleccionar Tipo" 
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Mercado</label>
-                        <Dropdown 
-                            value={Values.market} 
-                            options={marketOptions} 
-                            onChange={(e) => handleInputChange(e.value, "market")} 
-                            optionLabel="enumlabel"
-                            optionValue="enumlabel"
-                            placeholder="Seleccionar Mercado" 
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Hora</label>
-                        <Dropdown 
-                            value={Values.hour} 
-                            options={hourOptions} 
-                            onChange={(e) => handleInputChange(e.value, "hour")} 
-                            optionLabel="enumlabel"
-                            optionValue="enumlabel"
-                            placeholder="Seleccionar Hora" 
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Entry (pe)</label>
-                        <InputNumber 
-                            value={Values.pe} 
-                            onValueChange={(e) => handleInputChange(e.value, "pe")} 
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Stop lose (sl)</label>
-                        <InputNumber 
-                            value={Values.sl} 
-                            onValueChange={(e) => handleInputChange(e.value, "sl")} 
-                        />
-                    </div>
+        <>
+            {/* <Toast ref={toast}/> */}
+            <div className="flex justify-content-center">
+                <div className="p-4 col-6">
+                    <Card 
+                        title={id !== 0 && id !== null ? 'Actualiza trade' : 'Nuevo trade'}
+                        className="p-fluid" 
+                    >
+                        <div className="col-12" style={{ marginTop: '-1rem' }}>
+                            <label>Mercado</label>
+                            <InputText 
+                                value={Values.market} 
+                                onChange={(e) => handleInputChange(e.target.value, "market")} 
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Tipo</label>
+                            <Dropdown 
+                                value={Values.type} 
+                                options={typeOptions} 
+                                onChange={(e) => handleInputChange(e.value, "type")} 
+                                optionLabel="enumlabel"
+                                optionValue="enumlabel"
+                                placeholder="Seleccionar Tipo" 
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Movimiento</label>
+                            <Dropdown 
+                                value={Values.mov} 
+                                options={marketOptions} 
+                                onChange={(e) => handleInputChange(e.value, "mov")} 
+                                optionLabel="enumlabel"
+                                optionValue="enumlabel"
+                                placeholder="Seleccionar Mercado" 
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Hora</label>
+                            <Dropdown 
+                                value={Values.hour} 
+                                options={hourOptions} 
+                                onChange={(e) => handleInputChange(e.value, "hour")} 
+                                optionLabel="enumlabel"
+                                optionValue="enumlabel"
+                                placeholder="Seleccionar Hora" 
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Entry (pe)</label>
+                            <InputNumber 
+                                value={Values.pe} 
+                                onValueChange={(e) => handleInputChange(e.value, "pe")} 
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Stop lose (sl)</label>
+                            <InputNumber 
+                                value={Values.sl} 
+                                onValueChange={(e) => handleInputChange(e.value, "sl")} 
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Top profit (tp)</label>
-                        <InputNumber 
-                            value={Values.tp} 
-                            onValueChange={(e) => handleInputChange(e.value, "tp")} 
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Top profit (tp)</label>
+                            <InputNumber 
+                                value={Values.tp} 
+                                onValueChange={(e) => handleInputChange(e.value, "tp")} 
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Pips</label>
-                        <InputNumber 
-                            value={Values.pips} 
-                            onValueChange={(e) => handleInputChange(e.value, "pips")} 
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Pips</label>
+                            <InputNumber 
+                                value={Values.pips} 
+                                onValueChange={(e) => handleInputChange(e.value, "pips")} 
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Total</label>
-                        <InputNumber 
-                            value={Values.total} 
-                            onValueChange={(e) => handleInputChange(e.value, "total")} 
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Total</label>
+                            <InputNumber 
+                                value={Values.total} 
+                                onValueChange={(e) => handleInputChange(e.value, "total")} 
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Banco</label>
-                        <Dropdown 
-                            value={Values.bank} 
-                            options={bankOptions} 
-                            onChange={(e) => handleInputChange(e.value, "bank")} 
-                            optionLabel="name"
-                            optionValue="idbank"
-                            placeholder="Seleccionar Banca" 
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Banco</label>
+                            <Dropdown 
+                                value={Values.bank} 
+                                options={bankOptions} 
+                                onChange={(e) => handleInputChange(e.value, "bank")} 
+                                optionLabel="name"
+                                optionValue="idbank"
+                                placeholder="Seleccionar Banca" 
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Fecha Entrada</label>
-                        <Calendar 
-                            value={Values.dateIn} 
-                            onChange={(e) => handleInputChange(e.value, "dateIn")} 
-                            showIcon 
-                            showTime
-                            hourFormat="24"
-                            dateFormat="yy-mm-dd"
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Fecha Entrada</label>
+                            <Calendar 
+                                value={Values.dateIn} 
+                                onChange={(e) => handleInputChange(e.value, "dateIn")} 
+                                showIcon 
+                                showTime
+                                hourFormat="24"
+                                dateFormat="yy-mm-dd"
+                            />
+                        </div>
 
-                    <div className="col-12">
-                        <label>Fecha Salida</label>
-                        <Calendar 
-                            value={Values.dateOut} 
-                            onChange={(e) => handleInputChange(e.value, "dateOut")} 
-                            showIcon 
-                            showTime
-                            hourFormat="24"
-                            dateFormat="yy-mm-dd"
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label>Comentario</label>
-                        <InputTextarea 
-                            value={Values.comment} 
-                            onChange={(e) => handleInputChange(e.target.value, "comment")} rows={4} 
-                        />
-                    </div>
+                        <div className="col-12">
+                            <label>Fecha Salida</label>
+                            <Calendar 
+                                value={Values.dateOut} 
+                                onChange={(e) => handleInputChange(e.value, "dateOut")} 
+                                showIcon 
+                                showTime
+                                hourFormat="24"
+                                dateFormat="yy-mm-dd"
+                            />
+                        </div>
+                        
+                        <div className="col-12">
+                            <label>Comentario</label>
+                            <InputTextarea 
+                                value={Values.comment} 
+                                onChange={(e) => handleInputChange(e.target.value, "comment")} rows={4} 
+                            />
+                        </div>
 
-                    <div className="col-12 flex justify-content-end">
-                        <Button 
-                            label={id !== 0 && id !== null ? 'Actualizar' : 'Guardar'} 
-                            size="small"
-                            onClick={ handleSubmit }
-                        />
-                    </div>
-                </Card>
+                        <div className="col-12 flex justify-content-end">
+                            <Button 
+                                label={id !== 0 && id !== null ? 'Actualizar' : 'Guardar'} 
+                                size="small"
+                                onClick={ handleSubmit }
+                            />
+                        </div>
+                    </Card>
+                </div>
             </div>
-        </div>
+        </>
     )
 
 }
